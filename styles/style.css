@@ -8,22 +8,27 @@ body, ul, li, p {
 	font-style: normal;
 }
 
+p {
+	padding: 10px;
+	margin: 10px;
+}
+
 a {
 	text-decoration: none;
 }
 
 .header {
 	display: flex;
-	justify-content: space-between;
+	justify-content: space-around;
     flex-wrap: wrap;
-    box-shadow: 1px 1px 4px 1px;
-    
+    box-shadow: 1px 1px 4px 1px;    
+	background-color: lightgreen;
 }
 
 .menu {
 	display: flex;
     flex-wrap: wrap;
-    
+	justify-content: center;
 }
 
 .menu li {
@@ -36,5 +41,108 @@ a {
     text-decoration: none;
     color: black;
 }
+
+.competencias {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+	margin-top: 20px;
+	margin: 20px auto;
+	text-align: center;	
+	max-width: 40%;
+
+}
+.acompetencias ul {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+.competencias li {
+	margin: 10px;
+	padding: 10px;
+	background-color: #f0f0f0;
+	border-radius: 5px;
+	display: flex;
+	align-items: center;
+	border: dashed 1px;
+}
+
+.competencias li img {
+	width: 50px;
+	height: 50px;
+	display: block;
+	padding-right: 5px;
+	
+}
+
+.competencias a {
+	text-decoration: none;
+	color: black;
+}
+
+
+.competencias-jogos {
+	background-color: aliceblue;
+	margin: 0 auto;
+}
+
+.competencias-jogos li {
+	background-color: lightblue;
+}
+
+.competencias-sistemas {
+	background-color: lightyellow;
+	margin: 0 auto;
+}
+
+.competencias-sistemas li {
+	background-color: moccasin;
+}
+
+
+.comp-header {
+	background-color: lightgreen;
+	margin: 0 auto;
+	padding: 10px;
+	font-size: 125%;
+	box-shadow: 1px 1px 4px 1px;
+	text-align: center;
+}
+
+.comp-jogos-header {
+	background-color: lightblue;
+	margin: 0 auto;
+	padding: 20px;
+	font-size: 200%;
+	box-shadow: 1px 1px 4px 1px;
+	text-align: center;
+}
+
+.comp-jogos-content-header {
+	max-width: 60%;
+	margin: 0 auto;
+	margin-top: -10px;
+	padding: 20px;
+	font-size: 125%;
+	border: dashed 1px;
+	text-align: center;
+}
+
+.comp-jogos-content {
+	background-color: aliceblue;
+	max-width: 80%;
+	margin: 0 auto;
+	padding: 20px;
+	margin-top: 10px;
+	border: dashed 1px;
+	text-align: center;
+}
+
+.comp-jogos-content li {
+	list-style:square
+}
+
+
+
 
 
