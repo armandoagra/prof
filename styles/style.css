@@ -8,6 +8,10 @@ body, ul, li, p {
 	font-style: normal;
 }
 
+body{
+	position: absolute;
+}
+
 p {
 	padding: 10px;
 	margin: 10px;
@@ -23,12 +27,16 @@ a {
     flex-wrap: wrap;
     box-shadow: 1px 1px 4px 1px;    
 	background-color: lightgreen;
+	position: fixed;
+	max-width: 100%;
+	width: 100%;
 }
 
 .menu {
 	display: flex;
     flex-wrap: wrap;
 	justify-content: center;
+	
 }
 
 .menu li {
@@ -107,11 +115,14 @@ a {
 	font-size: 125%;
 	box-shadow: 1px 1px 4px 1px;
 	text-align: center;
+	margin-top: 0;
+
 }
 
 .comp-jogos-header {
 	background-color: lightblue;
 	margin: 0 auto;
+	margin-top: 40px;
 	padding: 20px;
 	font-size: 200%;
 	box-shadow: 1px 1px 4px 1px;
