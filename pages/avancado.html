@@ -160,9 +160,160 @@ public class CharacterSO : <strong>ScriptableObject</strong>
         <p>Resposta imediata no input do jogador, aceleração e desaceleração com curvas, coyote time (muito importante em platformers!), input buffering, hit stop / slow-mo hits.</p>
         <p>Um pequeno adendo: muitas vezes os termos Feel e Juice são usados de forma equivalente, mas há quem prefira diferenciá-los</p>
         <iframe width="560" height="315" src="https://www.youtube.com/embed/216_5nu4aVQ?si=UP7uj6IV7jIKtA0j" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-
     </div>
+    <div class="comp-jogos-content">
+    <div class="comp-jogos-content-header" id="heranca">POO: Herança</div>
+        <p>Herança é um dos pilares da Programação Orientada a Objetos (POO). Ela permite que uma classe herde propriedades e métodos de outra classe, facilitando a reutilização de código e a criação de hierarquias de classes.</p>
+        <p>Em Unity, a herança é frequentemente usada para criar classes base que podem ser estendidas por outras classes. Por exemplo, você pode ter uma classe base chamada "Enemy" que define propriedades e métodos comuns para todos os inimigos do jogo. Em seguida, você pode criar subclasses como "Zombie" e "Alien" que herdam de "Enemy" e adicionam suas próprias características específicas.</p>
+        <p>Exemplo:</p>
+        <pre class="prettyprint">
+            <code>
+using UnityEngine;
+public class Enemy : MonoBehaviour
+{
+    public int health;
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
+            Die();
+        }
+    }
+    public void Die()
+    {
+        Destroy(gameObject);
+    }
+}
+</code>
+</pre>
+<pre class="prettyprint">
+    <code>
+public class Alien : <strong>Enemy</strong>
+{
+    public override void Die()
+    {
+        // Lógica de morte específica do alien
+        Debug.Log("Alien died!");
+        base.Die(); // Chama a lógica de morte da classe base
+    }
+}
+    </code>
+</pre>
 
+<p>Com os scripts acima, podemos criar dois tipos de inimigos: um inimigo genérico (Enemy) e um Alien. Também poderíamos ter implementado uma lógica única para o zumbi, como dito antes dos exemplos.</p>
+
+<div class="comp-jogos-content-header">Interface</div>
+        <p>Interface é um contrato que define um conjunto de métodos que uma classe deve implementar. Em Unity, as interfaces são usadas para definir comportamentos comuns que podem ser aplicados a diferentes classes.</p>
+        <p>Por exemplo, você pode ter uma interface chamada "IDamageable" que define um método "TakeDamage". Qualquer classe que implemente essa interface deve fornecer uma implementação para o método "TakeDamage". Isso permite que você crie classes que podem ser danificadas, independentemente de sua hierarquia de classes.</p>
+        <pre class="prettyprint">
+            <code>
+public interface IDamageable
+{
+    void TakeDamage(int damage);
+    void Die();
+}
+</code></pre>
+        <p>Exemplo de implementação de uma interface:</p>
+        <pre class="prettyprint">
+            <code>
+using UnityEngine;
+
+public class Player : MonoBehaviour, IDamageable
+{
+    public int health;
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
+            Die();
+        }
+    }
+    public void Die()
+    {
+        Debug.Log("Player died!");
+        Destroy(gameObject);
+    }
+}
+</code>
+</pre>
+
+
+<p>É importante saber também que quando um script implementa uma interface, o objeto passa a ser também desse tipo.</p>
+<p>Por exemplo, se o Player implementa a interface IDamageable, podemos fazer:</p>
+<pre class="prettyprint">
+    <code>
+        IDamageable damageable = player.GetComponent&lt;IDamageable&gt;();
+        if (damageable != null)
+        {
+            damageable.TakeDamage(10);
+        }
+    </code>
+</pre>
+<p>Isso é útil para quando queremos aplicar um dano a qualquer objeto que implemente a interface, sem precisar saber exatamente qual é o tipo do objeto.</p>
+<p>Uma outra aplicação é quando temos uma gama de objetos que são interativos, mas cada um tem sua própria classe:</p>
+<ul>
+    <li>Door.cs</li>
+    <li>Chest.cs</li>
+    <li>NPC.cs</li>
+</ul>
+<p>Todos esses objetos podem implementar uma interface chamada IInteractable, que define um método Interact(). Assim, podemos ter um script que interage com qualquer objeto que implemente essa interface, sem precisar saber qual é o tipo exato do objeto.</p>
+<pre class="prettyprint">
+    <code>
+public interface IInteractable
+{
+    void Interact();
+}
+</code>
+</pre>
+<pre class="prettyprint">
+    <code>
+public class PlayerInteraction : MonoBehaviour {
+
+    private void Update(){
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            IInteractable interactable = GetObjectToInteractWith(); // Método que retorna o objeto a ser interagido
+            InteractWithObject(obj);
+        }
+    }
+
+    private IInteractable GetObjectToInteractWith(){
+        // Raycast na frente do player
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, transform.forward, out hit, 3f))
+        {
+            GameObject obj = hit.collider.gameObject;
+            IInteractable interactable = obj.GetComponent&lt;IInteractable&gt;();
+            if (interactable != null)
+            {
+                return interactable;
+            }
+        }
+        return null; 
+    }
+
+    private void InteractWithObject(IInteractable interactable)
+    {
+        if (interactable != null)
+        {
+            interactable.Interact();
+        }
+    }
+}     
+</code>   
+</pre>
+<p>Dessa forma, não importa qual seja o objeto, contanto que o script implemente a interface, poderemos interagir com ele.</p>
+<p>Se não fizessemos dessa forma, provavelmente teríamos que criar uma grande estrutura condicional que verificasse se o objeto é uma porta, se é um baú, um NPC...</p>
+<div class="comp-jogos-content-header">POO em outras engines.</div>
+        <p>É importante ressaltar que a Programação Orientada a Objetos é um paradigma de programação que pode ser aplicado em diversas linguagens e engines, não apenas na Unity.</p>
+        <p>Outras engines, como Unreal Engine, Godot e Construct, também suportam POO e oferecem recursos semelhantes para criar jogos orientados a objetos.</p>
+        <p>Em Unreal Engine, por exemplo, você pode usar Blueprints para criar classes e heranças e interfaces de forma visual. Já no Construct, existem as "Families". Cada engine tem suas próprias peculiaridades, mas os conceitos fundamentais de POO permanecem os mesmos.</p>
+        
+        
+    </div>
+</div>
     
 
     <script src="../scripts/script.js"></script>
