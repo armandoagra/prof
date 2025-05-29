@@ -430,8 +430,10 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public static Action&lt;string, int&gt; OnPlayerScored;
+    private int score;
+    [SerializeField] private string playerName;
 
-    public void Score(string playerName, int points)
+    public void Score()
     {
         Debug.Log($"{playerName} scored {points} points!");
         OnPlayerScored?.Invoke(playerName, points);
