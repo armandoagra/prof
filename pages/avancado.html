@@ -33,6 +33,7 @@
             <li><a href="#feel">Game Feel</a></li>
             <li><a href="#heranca">POO: Herança</a></li>
             <li><a href="#interface">POO: Interface</a></li>
+            <li><a href="#events">C# Events</a></li>
         </ol>
     </div>
     <div class="comp-jogos-content">
@@ -310,13 +311,137 @@ public class PlayerInteraction : MonoBehaviour {
 </pre>
 <p>Dessa forma, não importa qual seja o objeto, contanto que o script implemente a interface, poderemos interagir com ele.</p>
 <p>Se não fizessemos dessa forma, provavelmente teríamos que criar uma grande estrutura condicional que verificasse se o objeto é uma porta, se é um baú, um NPC...</p>
-<div class="comp-jogos-content-header">POO em outras engines.</div>
+<div class="comp-jogos-content-header">POO em outras engines</div>
         <p>É importante ressaltar que a Programação Orientada a Objetos é um paradigma de programação que pode ser aplicado em diversas linguagens e engines, não apenas na Unity.</p>
         <p>Outras engines, como Unreal Engine, Godot e Construct, também suportam POO e oferecem recursos semelhantes para criar jogos orientados a objetos.</p>
         <p>Em Unreal Engine, por exemplo, você pode usar Blueprints para criar classes e heranças e interfaces de forma visual. Já no Construct, existem as "Families". Cada engine tem suas próprias peculiaridades, mas os conceitos fundamentais de POO permanecem os mesmos.</p>
         
         
     </div>
+</div>
+<div class="comp-jogos-content">
+<div class="comp-jogos-content-header" id="events">C# Events</div>
+        <p>Event é um conceito importante em C# que permite a criação de código mais flexível e reutilizável.</p>
+        <p>Os eventos são uma forma de comunicação entre objetos. Eles permitem que um objeto notifique outros objetos quando algo acontece, como uma mudança de estado ou uma ação do usuário.</p>
+        <p>Exemplo de uso de Events:</p>
+        <pre class="prettyprint">
+            <code>
+using System;
+using UnityEngine;
+public class Player : MonoBehaviour
+{
+    public static <strong>Action</strong> OnPlayerDied;
+
+    public void Die()
+    {
+        Debug.Log("Player died!");
+        <strong>OnPlayerDied?.Invoke();</strong> // Notifica os inscritos no evento
+    }
+}
+</code>
+        </pre>
+        <p>Para se inscrever em um evento, você pode usar o operador +=:</p>
+        <pre class="prettyprint">
+            <code>
+using UnityEngine;
+public class GameManager : MonoBehaviour
+{
+    private void <strong>OnEnable()</strong>
+    {
+        <strong>Player.OnPlayerDied += HandlePlayerDied;</strong> // Inscreve no evento
+    }
+    private void <strong>OnDisable()</strong>
+    {
+        <strong>Player.OnPlayerDied -= HandlePlayerDied;</strong> // Cancela a inscrição no evento (importante!)
+    }
+
+    private void HandlePlayerDied()
+    {
+        Debug.Log("Player morreu...");
+    }
+}
+            </code>
+        </pre>
+        <p>Os eventos servem para desacoplar o código e permitir que diferentes partes do jogo se comuniquem de forma eficiente.</p>
+        <p>Também é possível passar informações nos eventos, como faríamos com parâmetros de uma função:</p>
+        <pre class="prettyprint">
+            <code>
+using System;
+using UnityEngine;
+public class Coin : MonoBehaviour
+{
+    public static Action&lt;int&gt; OnCoinCollected;
+    [SerializeField] private int value;
+    public void CoinCollected()
+    {
+        OnCoinCollected.Invoke(value);
+    }
+}
+            </code>
+        </pre>
+        <pre class="prettyprint">
+            <code>
+using UnityEngine;
+public class ScoreManager : MonoBehaviour
+{
+    public static Action&lt;int&gt; OnScoreChanged;
+    private int score;
+    private void OnEnable()
+    {
+        Coin.OnCoinCollected += HandleCoinCollected; // Inscreve no evento
+    }
+    private void OnDisable()
+    {
+        Coin.OnCoinCollected -= HandleCoinCollected; // Cancela a inscrição no evento
+    }
+    private void HandleCoinCollected(int coinValue)
+    {
+        score += coinValue;
+        OnScoreChanged?.Invoke(score);
+    }
+            </code>
+        </pre>
+        <pre class="prettyprint">
+            <code>
+using UnityEngine;
+public class UIManager : MonoBehaviour
+{
+    private void OnEnable()
+    {
+        ScoreManager.OnScoreChanged += UpdateScoreUI; // Inscreve no evento
+    }
+    private void OnDisable()
+    {
+        ScoreManager.OnScoreChanged -= UpdateScoreUI; // Cancela a inscrição no evento
+    }
+    private void UpdateScoreUI(int newScore)
+    {
+        Debug.Log("Score atualizado!");
+        // atualizar ui
+    }
+            </code>
+        </pre>
+        <p>Com isso, quando a moeda for coletada, o evento OnCoinCollected será disparado, passando o valor da moeda para todos os inscritos no evento. O ScoreManager irá atualizar a pontuação e disparar o evento OnScoreChanged, que será capturado pelo UIManager para atualizar a interface do usuário.</p>
+        <p>É legal também saber que é possível passar mais de um parâmetro:</p>
+        <pre class="prettyprint">
+            <code>
+using System;
+using UnityEngine;
+public class Player : MonoBehaviour
+{
+    public static Action&lt;string, int&gt; OnPlayerScored;
+
+    public void Score(string playerName, int points)
+    {
+        Debug.Log($"{playerName} scored {points} points!");
+        OnPlayerScored?.Invoke(playerName, points);
+    }
+}
+            </code>
+        </pre>
+        <p>Com isso, podemos ter um evento que notifica quando um jogador marca pontos, passando o nome do jogador e a quantidade de pontos marcados.</p>
+
+
 </div>
     
 
