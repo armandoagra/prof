@@ -603,6 +603,14 @@ public class GameManager : MonoBehaviour
             </code>
         </pre>
         <p>Com isso, você pode salvar e carregar os dados do jogador de forma persistente entre sessões de jogo.</p>
+        <div class="comp-jogos-content-header">Desafios do Save/Load</div>
+        <p>Como você pode ter percebido, quando estamos trabalhando com save/load, só conseguimos trabalhar com dados simples:</p>
+        <p>int, float, strings...</p>
+        <p>Não conseguimos salvar objetos complexos, como GameObjects, Prefabs ou sequer classes que não sejam serializáveis.</p>
+        <p>Fora isso, quando pensamos em um sistema de save com checkpoints, por exemplo, temos que pensar como reconstruir a cena a partir do estado salvo.</p>
+        <p>Tendo que, por exemplo, salvar a posição de cada GameObject, o estado de cada inimigo, o estado de cada item coletado...</p>
+        <p>Sem dúvidas, uma tarefa desafiadora, mas que pode ser resolvida com um bom planejamento e organização do código, além da colaboração do game designer!</p>
+
     </div>
 
 
