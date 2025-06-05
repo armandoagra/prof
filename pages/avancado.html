@@ -554,6 +554,55 @@ public class GameManager : MonoBehaviour
             </code>
         </pre>
         <p>Com isso, você pode armazenar dados complexos de forma persistente entre sessões de jogo.</p>
+        <p>É importante lembrar que o JSON é um formato de texto, então você pode salvar o JSON em um arquivo e carregá-lo quando necessário. Para isso, você pode usar a classe File do namespace System.IO.</p>
+        <pre class="prettyprint">
+            <code>using UnityEngine;
+using System.Collections.Generic;
+using System.IO;
+[System.Serializable]
+public class PlayerData
+{
+    public string playerName;
+    public int playerScore;
+    public List&lt;string&gt; inventoryItems;
+}
+public class GameManager : MonoBehaviour
+{
+    private string filePath;
+
+    private void Start()
+    {
+        filePath = Path.Combine(Application.persistentDataPath, "playerData.json");
+        SavePlayerData();
+        LoadPlayerData();
+    }
+
+    private void SavePlayerData()
+    {
+        PlayerData playerData = new PlayerData
+        {
+            playerName = "Jogador 1",
+            playerScore = 100,
+            inventoryItems = new List&lt;string&gt; { "Item1", "Item2", "Item3" }
+        };
+        string json = JsonUtility.ToJson(playerData);
+        File.WriteAllText(filePath, json);
+    }
+
+    private void LoadPlayerData()
+    {
+        if (File.Exists(filePath))
+        {
+            string json = File.ReadAllText(filePath);
+            PlayerData loadedData = JsonUtility.FromJson&lt;PlayerData&gt;(json);
+            Debug.Log($"Name: {loadedData.playerName}, Score: {loadedData.playerScore}");
+        }
+    }
+}
+            </code>
+        </pre>
+        <p>Com isso, você pode salvar e carregar os dados do jogador de forma persistente entre sessões de jogo.</p>
+    </div>
 
 
 </div>
