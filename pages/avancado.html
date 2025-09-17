@@ -34,6 +34,7 @@
             <li><a href="#heranca">POO: Herança</a></li>
             <li><a href="#interface">POO: Interface</a></li>
             <li><a href="#events">C# Events</a></li>
+            <li><a href="#saveload">Persistência de dados: Save/Load</a></li>
         </ol>
     </div>
     <div class="comp-jogos-content">
@@ -314,7 +315,7 @@ public class PlayerInteraction : MonoBehaviour {
 <div class="comp-jogos-content-header">POO em outras engines</div>
         <p>É importante ressaltar que a Programação Orientada a Objetos é um paradigma de programação que pode ser aplicado em diversas linguagens e engines, não apenas na Unity.</p>
         <p>Outras engines, como Unreal Engine, Godot e Construct, também suportam POO e oferecem recursos semelhantes para criar jogos orientados a objetos.</p>
-        <p>Em Unreal Engine, por exemplo, você pode usar Blueprints para criar classes e heranças e interfaces de forma visual. Já no Construct, existem as "Families". Cada engine tem suas próprias peculiaridades, mas os conceitos fundamentais de POO permanecem os mesmos.</p>
+        <p>Na Unreal você pode usar Blueprints para criar classes e heranças e interfaces de forma visual. Já no Construct, existem as "Families". Cada engine tem suas próprias peculiaridades, mas os conceitos fundamentais de POO permanecem os mesmos.</p>
         
         
     </div>
@@ -430,8 +431,10 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public static Action&lt;string, int&gt; OnPlayerScored;
+    private int score;
+    [SerializeField] private string playerName;
 
-    public void Score(string playerName, int points)
+    public void Score()
     {
         Debug.Log($"{playerName} scored {points} points!");
         OnPlayerScored?.Invoke(playerName, points);
@@ -443,6 +446,183 @@ public class Player : MonoBehaviour
 
 
 </div>
+<div class="comp-jogos-content">
+    <div class="comp-jogos-content-header" id="saveload">Persistência de dados: Save/Load</div>
+    <p>Um assunto muito importante no desenvolvimento de jogos é a persistência de dados</p>
+    <p>A persistência de dados é o que usamos para guardar as informações sobre o progresso do jogador tanto entre cenas como também entre sessões de jogo</p>
+    <p>Ou seja, se queremos que o jogador não precise recomeçar a jogar do zero toda vez que inicia o jogo, precisamos implementar algum tipo de persistência de dados</p>
+    <p>Aqui, veremos as seguintes formas: 
+        <ul>
+            <li>Classes e variáveis estáticas (entre cenas)</li>
+            <li>DontDestroyOnLoad (entre cenas)</li>
+            <li>PlayerPrefs (entre sessões)</li>
+            <li>JSON (entre sessões)</li>
+        </ul>
+    <p>Mas existem outras formas de fazer isso, como:</p>
+        <ul>
+            <li>Banco de dados</li>
+            <li>Serviços backend (online)</li>
+        </ul>
+        <div class="comp-jogos-content-header">Classes e variáveis estáticas</div>
+        <p>Classes e variáveis estáticas são uma forma simples de armazenar dados que precisam ser acessados em diferentes partes do jogo.</p>
+        <p>Uma classe estática é uma classe que não pode ser instanciada e cujos membros são acessados diretamente pela classe, sem a necessidade de criar uma instância.</p>
+        <p>Exemplo de classe estática:</p>
+        <pre class="prettyprint"><code>using UnityEngine;
+public static class GameData
+{
+    public static int playerScore;
+    public static string playerName;
+}</code></pre>
+        <p>Para acessar os dados, basta usar o nome da classe:</p>
+        <pre class="prettyprint">
+            <code>
+Debug.Log(GameData.playerScore);
+GameData.playerName = "Jogador 1";
+            </code>
+        </pre>
+        <p>As variáveis estáticas são úteis para armazenar dados que precisam ser acessados em diferentes partes do jogo, mas não são persistentes entre sessões.</p>
+        <div class="comp-jogos-content-header">DontDestroyOnLoad</div>
+        <p>O método DontDestroyOnLoad é usado para manter um GameObject ativo entre cenas. Isso é útil para armazenar dados que precisam ser acessados em diferentes cenas, como o estado do jogador ou o progresso do jogo.</p>
+        <p>Para usar o DontDestroyOnLoad, basta chamar o método no GameObject que você deseja manter ativo:</p>
+        <pre class="prettyprint">
+            <code>
+using UnityEngine;
+public class GameManager : MonoBehaviour
+{
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject); 
+    }
+}
+            </code>
+        </pre>
+        <p>Com isso, o GameManager será mantido ativo entre cenas e você poderá acessar seus dados em qualquer cena do jogo.</p>
+        <div class="comp-jogos-content-header">PlayerPrefs</div>
+        <p>PlayerPrefs é uma forma simples de armazenar dados persistentes entre sessões de jogo. Ele permite que você armazene dados como pontuação, configurações e progresso do jogador.</p>
+        <p>Para usar o PlayerPrefs, você pode usar os métodos SetInt, SetFloat e SetString para armazenar dados e GetInt, GetFloat e GetString para recuperar os dados:</p>
+        <pre class="prettyprint">
+            <code>
+using UnityEngine;
+public class GameManager : MonoBehaviour
+{
+    private void Start()
+    {
+        PlayerPrefs.SetInt("PlayerScore", 100);
+        PlayerPrefs.SetString("PlayerName", "Jogador 1");
+    }
+    private void Update()
+    {
+        int score = PlayerPrefs.GetInt("PlayerScore"); 
+        string name = PlayerPrefs.GetString("PlayerName");
+        Debug.Log($"Score: {score}, Name: {name}");
+    }
+}
+            </code>
+        </pre>
+        <p>O PlayerPrefs é útil para armazenar dados simples, mas não é recomendado para armazenar grandes quantidades de dados ou dados complexos.</p>
+        <div class="comp-jogos-content-header">JSON</div>
+        <p>JSON (JavaScript Object Notation) é um formato leve de troca de dados que é fácil de ler e escrever. Ele é amplamente utilizado para armazenar e transmitir dados entre sistemas.</p>
+        <p>Em Unity, você pode usar o JSONUtility para serializar e desserializar objetos em JSON. Isso permite que você armazene dados complexos, como listas e dicionários, de forma persistente entre sessões.</p>
+        <p>Exemplo de uso do JSONUtility:</p>
+        <pre class="prettyprint">
+            <code>
+using UnityEngine;
+using System.Collections.Generic;
+[System.Serializable]
+public class PlayerData
+{
+    public string playerName;
+    public int playerScore;
+    public List&lt;string&gt; inventoryItems;
+}
+public class GameManager : MonoBehaviour
+{
+    private void Start()
+    {
+        PlayerData playerData = new PlayerData
+        {
+            playerName = "Jogador 1",
+            playerScore = 100,
+            inventoryItems = new List&lt;string&gt; { "Item1", "Item2", "Item3" }
+        };
+        string json = JsonUtility.ToJson(playerData);
+        Debug.Log(json);
+        
+        PlayerData loadedData = JsonUtility.FromJson&lt;PlayerData&gt;(json);
+        Debug.Log($"Name: {loadedData.playerName}, Score: {loadedData.playerScore}");
+    }
+}
+            </code>
+        </pre>
+        <p>Com isso, você pode armazenar dados complexos de forma persistente entre sessões de jogo.</p>
+        <p>É importante lembrar que o JSON é um formato de texto, então você pode salvar o JSON em um arquivo e carregá-lo quando necessário. Para isso, você pode usar a classe File do namespace System.IO.</p>
+        <pre class="prettyprint">
+            <code>using UnityEngine;
+using System.Collections.Generic;
+using System.IO;
+[System.Serializable]
+public class PlayerData
+{
+    public string playerName;
+    public int playerScore;
+    public List&lt;string&gt; inventoryItems;
+}
+public class GameManager : MonoBehaviour
+{
+    private string filePath;
+
+    private void Start()
+    {
+        filePath = Path.Combine(Application.persistentDataPath, "playerData.json");
+        SavePlayerData();
+        LoadPlayerData();
+    }
+
+    private void SavePlayerData()
+    {
+        PlayerData playerData = new PlayerData
+        {
+            playerName = "Jogador 1",
+            playerScore = 100,
+            inventoryItems = new List&lt;string&gt; { "Item1", "Item2", "Item3" }
+        };
+        string json = JsonUtility.ToJson(playerData);
+        File.WriteAllText(filePath, json);
+    }
+
+    private void LoadPlayerData()
+    {
+        if (File.Exists(filePath))
+        {
+            string json = File.ReadAllText(filePath);
+            PlayerData loadedData = JsonUtility.FromJson&lt;PlayerData&gt;(json);
+            Debug.Log($"Name: {loadedData.playerName}, Score: {loadedData.playerScore}");
+        }
+    }
+}
+            </code>
+        </pre>
+        <p>Com isso, você pode salvar e carregar os dados do jogador de forma persistente entre sessões de jogo.</p>
+        <div class="comp-jogos-content-header">Desafios do Save/Load</div>
+        <p>Como você pode ter percebido, quando estamos trabalhando com save/load, só conseguimos trabalhar com dados simples:</p>
+        <p>int, float, strings...</p>
+        <p>Não conseguimos salvar objetos complexos, como GameObjects, Prefabs ou sequer classes que não sejam serializáveis.</p>
+        <p>Fora isso, quando pensamos em um sistema de save com checkpoints, por exemplo, temos que pensar como reconstruir a cena a partir do estado salvo.</p>
+        <p>Tendo que, por exemplo, salvar a posição de cada GameObject, o estado de cada inimigo, o estado de cada item coletado...</p>
+        <p>Sem dúvidas, uma tarefa desafiadora, mas que pode ser resolvida com um bom planejamento e organização do código, além da colaboração do game designer!</p>
+
+    </div>
+    <div class="comp-jogos-content">
+        <div class="comp-jogos-content-header" id="tooling">Tooling - criação de ferramentas</div>
+        <p>Tools (ferramentas) próprias são importantes  para o desenvolvimento de jogos, pois ajudam a automatizar tarefas repetitivas, melhorar a eficiência e facilitar a colaboração entre os membros da equipe.</p>
+        <p>Ferramentas personalizadas podem ser criadas para atender às necessidades específicas do projeto, como geração de níveis, criação de animações, edição de dados, entre outros.</p>
+        <p>Particularmente, já criei ferramentas para gerar scripts nas arquiteturas MVVM e MVC, para posicionar elementos na cena e para gerar o os níveis de um jogo de ritmo. </p>
+        <p>Todas essas ferramentas foram de grande valia para a equipe, pois pouparam bastante tempo e esforço de desenvolvimento! :)</p>
+    </div>
+
+
+</div>
+
     
 
     <script src="../scripts/script.js"></script>
