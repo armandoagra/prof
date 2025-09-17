@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../styles/style.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Gidole&display=swap" rel="stylesheet">
+    <title>VFX: Sistema de partículas e Shader Graph</title>
+</head>
+<body>
+    <header class="header"> 
+        <nav>
+        <ul class="menu">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="/">Recursos (Jogos)</a></li>
+            <li><a href="/">Contato</a></li>
+        </ul>
+    </nav>
+    </header>
+    <div class="comp-jogos-header">VFX</div>
+    <div class="summary">
+        <br><br>
+        <div class="comp-jogos-content-header">Sumário</div>
+        <ol>
+            <li><a href="#particles">Sistema de Partículas</a></li>
+            <li><a href="#shader-graph-intro">Introdução ao Shader Graph</a></li>
+            <li><a href="#criando-shader">Como criar um shader</a></li>
+            <li><a href="#shader-graph-interface">A interface do Shader Graph</a></li>
+            <li><a href="#shader-simples">Shader simples</a></li>
+            <li><a href="#texturas-e-uvs">Texturas e UVs</a></li>
+        </ol>
+    </div>
+    <div class="comp-jogos-content">
+        <div class="comp-jogos-content-header" id="shader-graph-intro">Shader Graph</div>
+        <p>Shaders são os pais ou modelos dos materiais. Um material nada mais é do que uma instância de um shader. Portanto, o shader determina o comportamento (se irá haver uma textura, uma cor, transparência, reflexão, ou até aspectos mais complexos, como algum elemento procedural, noise, etc) enquanto que o material é responsável pelos atributos (qual é a cor, qual é a textura, quanto de transparência, impacto do noise...).</p>
+        <p>Shader Graph é uma ferramenta visual dentro do Unity que permite criar shaders de forma intuitiva, sem a necessidade de escrever código manualmente. </p>
+        <p>Para começar a usar o Shader Graph, será necessário ter um projeto configurado com o URP (Universal Render Pipeline). Em seguida, basta criar um novo Shader Graph:</p>
+    </div>
+    <div class="comp-jogos-content">
+        <div class="comp-jogos-content-header" id="criando-shader">Como criar um shader</div>
+        <ol>
+            <li>Clique com o botão direito na janela do Project.</li>
+            <li>Selecione Create &gt; Shader Graph &gt; URP &gt; Unlit Shader Graph.</li>
+            <li><img src="../assets/shadergraph.png" alt="ShaderGraph 1" width="50%"></li>
+            <li>Dê um nome ao seu shader.</li>
+        </ol>
+    
+    <p>Vamos criar nosso primeiro shader?</p>
+    <p>Nosso primeiro shader vai ser responsável por determinar a cor de um objeto 3D.</p>
+    <p>Crie uma pasta com o nome Shaders e entre na pasta.</p>
+    <p>Crie seu shader e dê um nome a ele. Em seguida, clique duas vezes no arquivo criado para abrir a janela do Shader Graph.</p>
+    <img src="../assets/meu-primeiro-shader.png" width="50%" alt="Meu primeiro shader">
+    <br><br>
+    <div class="comp-jogos-content-header" id="shader-graph-interface">A interface</div><br>
+    <img src="../assets/shader-graph-interface.png" width="100%" alt="Interface Shader Graph">
+    <p>A interface do Shader Graph pode ser dividida em três áreas importantes:</p>
+    <ol>
+        <li>Do lado esquerdo temos o <b>Blackboard</b> - responsável por guardar todas as variáveis que nosso shader vai precisar: cores, texturas, floats, vetores, etc.</li>
+        <li>No meio temos a <b>área de trabalho</b> - é onde criaremos todos os <b>nodos/nodes</b> que alterarão o shader - repare que já existe o "master node" criado: todas as alterações que fizermos vão culminar nos inputs de Vertex e Fragment (mais sobre eles em breve!)</li>
+        <li>Do lado direito temos o <b>Graph Inspector</b> - é nele que iremos alterar as propriedades da variável, node ou do shader inteiro.</li>
+    </ol>
+    <div class="comp-jogos-content-header" id="shader-simples">Shader simples</div>
+    <ol>
+        <li>Vamos começar simples, alterando a cor do nosso shader:</p></li>
+        <li>No <b>master node</b>, clique na caixa de cor do Fragment e coloque alguma cor que não seja cinza.</li>
+        <li>Em seguida, salve usando Ctrl + S ou clicando no disquete no canto superior esquerdo da tela.</li>
+        <li>Agora, de volta à Unity, clique com o botão direito no seu shader > Create > Material. Dê um nome ao material.</li>
+        <li>Crie agora um objeto 3D na Unity, de preferência uma esfera ou cápsula.</li>
+        <li>Arraste seu material para o objeto 3D. Deu certo?</li>
+        <li>Agora, crie mais dois materiais com o mesmo shader e coloque em mais dois objetos 3D</li>
+        <li>Aqui encontramos um problema: todos os nossos materiais usam sempre a mesma cor... e a ideia é que os nossos shaders sejam configuráveis!</li>
+        <li>Para melhorar nosso shader, vamos abrí-lo na janela de Shader Graph novamente, e dessa vez vamos no <b>Blackboard</b></li>
+        <li>Clique no símbolo de + e selecione Color. Dê um nome a essa variável, como "Base Color".</li>
+        <li>Arraste a variável e arraste para a área de trabalho.</li>
+        <li>Foi criado um novo <b>node</b>, que conta com uma saída. Clique e segure na saída (output) para ligá-lo à entrada (input) do Base Color, dentro de Fragment</li>                                                            <li>Isso fará com que essa propriedade (variável) controle a cor base do nosso shader.</li>
+        <li><img src="../assets/shader-graph-base-color.png"></li>
+        <li>Você pode selecionar a variável criada e alterar seu valor padrão através do Graph Inspector.</li>
+        <li>Salve e volte para a Unity. Selecione um dos materiais criados. Repare que foi criado um novo campo no <b>inspector</b>. Altere a cor dos três materiais que você criou.</li>
+    </ol>
+    <div class="comp-jogos-content-header" id="texturas-e-uvs">Texturas e UVs</div>
+    <p>Todas as texturas usadas nesse material foram tiradas de <a href="https://ambientcg.com/">https://ambientcg.com/</a> e <a href="https://polyhaven.com/">https://polyhaven.com/</a></p>
+    <div class="importante">Antes de começarmos, duplique o seu shader anterior para trabalharmos com uma versão melhorada dele!
+        <br>É possível duplicar o shader selecionado o arquivo e pressionando Ctrl+D</div>
+    <p>É possível misturar uma cor base (como a que já temos) com uma textura. Isso é bem comum!</p>
+    <p>Para isso, vamos criar uma nova propriedade (variável) no Blackboard com o tipo Texture2D.</p>
+    <p>Com a propriedade selecionada, você pode escolher uma textura padrão para esse shader: no Graph Inspector, no espaço "Default Value", selecione a textura desejada. Caso você tenha baixado uma textura completa (com mapa normal, ambient occlusion, etc.), normalmente a textura desejada vai ter o nome "albedo" ou "color".</p>
+    <p>Arraste a variável para a área de trabalho. O node criado é um pouco diferente, ele, inclusive, não pode ser ligado diretamente ao "base color" do Fragment, como fizemos da última vez.</p>
+    <p>Para usar uma textura, precisamos de um node chamado Sample Texture 2D. Esse node é responsável por "ler" a textura e fornecer a cor correta para cada pixel do objeto 3D.</p>
+    <p>Crie esse node clicando com o botão direito na área de trabalho > Create Node > procure por "Sample Texture 2D" - você também pode apertar a barra de espaço para abrir a janela de criação de nodes.</p>
+    <p>Esse node tem como input uma textura, uma UV e um sampler. No momento o que nos interessa é a textura, que já temos! Agora basta ligar a nossa textura (node) ao Sample Texture 2D</p>
+<p>Já a saída desse node são cores: RGBA para uma combinação de todas as cores da textura (incluindo transparência) ou então as cores separadamente, caso desejado.</p>
+<p>Por fim, para combinar a cor base com a textura, precisamos multiplicar as cores. Essa é uma das formas de combinar cores, mas não é a única.</p>
+<p>Para isso, crie um node <b>multiply</b> que terá como entrada a base color e o RGBA da textura. A saída do multiply deve ir para o base color do Fragment.</p>
+<p><img src="../assets/texture-shader.png" width="75%"></p>    
+<p><img src="../assets/resultado-texture-shader.png" width="75%"></p>
+<div class="aviso">Vamos experimentar algo mais divertido?</div>
+<p>Crie uma nova propriedade "Scroll Velocity" - essa variável do tipo Vector2 vai determinar a velocidade que nossa textura se move pelo objeto. Altere o valor base para X = 1, Y = 0</p>
+<p>Para "animar" esses valores, vamos usar um novo node: <b>Time</b>. </p>
+<p>Multiplique Scroll Velocity por Time usando o node Multiply - esse será um Vector2 que aumenta com o tempo.</p>
+<p>Crie um novo node Tiling And Offset - conecte a saída do Multiply à entrada "Offset" deste node.</p>
+<p>Por fim, conecte o output do Tiling and Offset à entrada "UV" do Sample Texture 2D</p>
+<p>Salve e veja o resultado! Experimente com outros valores no Scroll Velocity.</p>
+<div class="aviso">Você pode perceber que na Unity o efeito só sofre alteração quando você mexe o mouse ou realiza alguma ação. Experimente posicionar a câmera corretamente e dar Play no jogo!
+    Você também pode fazer com que a cena sempre atualize:</div>
+    <img src="../assets/shader-always-refresh.png" width="25%" alt="Shader Always Refresh">
+</div>
+<div class="comp-jogos-content">
+    <div class="comp-jogos-content-header" id="transparencia">Transparência / Alpha</div>
+    <div class="importante">Antes de começarmos, duplique o seu shader anterior para trabalharmos com uma versão melhorada dele! No shader duplicado, remova toda a lógica de scrolling (movimentação) de textura.</div>
+    <p>Para iniciarmos, é preciso alterar uma configuração no nosso Shader: queremos que o material seja entendido como <b>transparente</b>, e não <b>opaco</b></p>
+    <p>Para isso, vamos no Graph Inspector > <b>Graph Settings</b> e vamos trocar o <b>Surface Type</b> para <b>Transparent</b></p>
+    <p>Com isso, uma nova entrada vai aparecer em Fragment: <b>Alpha</b> - responsável por controlar a transparência do material.</p>
+    <p>A gente quer que a cor base do nosso material seja responsável por controlar a transparência. Para isso, precisar pegar só o valor do Alpha depois da multiplicação entre Textura e Cor Base</p>
+    <p>Felizmente existe um node para isso! Após o Multiply, adicione o node <b>Split</b>, que vai dividir o nosso valor RGBA em R, G, B e A. Puxe o A para o Alpha. </p>
+    <img src="../assets/shader-transparency.png" width="75%" alt="Shader Transparência">
+    <br>
+    <div class="comp-jogos-content-header">Alpha Clipping</div>
+    <p>Alpha também pode ser usado para remover partes de um objeto. Com o Alpha Clipping, qualquer cor abaixo de um certo valor pode ser removida.</p>
+    <p>Vamos criar mais um shader baseado no exemplo de transparência (lembre de duplicar e abrir o novo)</p>
+    <p>No Graph Settings, troque o Surface Type de Transparent para Opaque (queremos que nosso objeto seja opaco!)</p>
+    <p>Ative o <b>Alpha Clipping</b> - uma nova entrada vai aparecer em Fragment, chamada <b>Alpha Clip Threshold</b></p>
+    <p>Crie uma nova propriedade (variável) do tipo Float, chamada Alpha Clip Threshold. Dê um valor padrão de 0.5</p>
+    <p>Arraste a variável para a área de trabalho e conecte ao Alpha Clip Threshold do Fragment</p>
+    <p>Agora, crie um novo objeto e coloque esse novo material nele. Escolha uma textura que tenha partes pretas, como um brilho (branco)</p>
+    <p>Altere o valor do Alpha Clip Threshold e veja o que acontece com o material.</p>
+    <img src="../assets/shader-alpha-clipping.png" width="75%" alt="Alpha Clipping">
+    <img src="../assets/shader-alpha-clipping-resultado.png" width="75%" alt="Alpha Clipping Result">
+    <div class="comp-jogos-content-header">Dithering</div>
+    <p>Outra forma de trabalhar com transparência é usando dithering. Dithering é um efeito que cria a ilusão de transparência através de um padrão de pontos, ao invés de usar transparência real.</p>
+    <p>Vamos criar mais um shader baseado no exemplo de alpha clipping (lembre de duplicar e abrir o novo)</p>
+    <p>Remova a propriedade "Alpha Clip Threshold" e o node na área de trabalho.</p>
+    <p>Crie um node "Dither" - ligue ele ao Alpha Clip Threshold no Fragment. Dê ao Dither o valor fixo 1</p>
+    <p>Crie um novo material com esse shader e altere o alpha da Base Color</p>
+    <img src="../assets/shader-dither.png" width="75%" alt="Dithering">
+    <img src="../assets/shader-dither-resultado.png" width="75%" alt="Dithering Result">
+
+</div>
+
+
+
+    
+    
+    
+    
+    
+</div>
+</div>
+</div>

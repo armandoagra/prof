@@ -180,6 +180,13 @@ pre {
 	border-radius: 50px;
 }
 
+.aviso {
+	background-color: #f5f2c2;
+	margin: 0 auto;
+	border: dashed 2px #f7ed49;
+	border-radius: 50px;
+}
+
 
 
 
