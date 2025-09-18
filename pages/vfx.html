@@ -30,6 +30,8 @@
             <li><a href="#shader-graph-interface">A interface do Shader Graph</a></li>
             <li><a href="#shader-simples">Shader simples</a></li>
             <li><a href="#texturas-e-uvs">Texturas e UVs</a></li>
+            <li><a href="#transparencia">Transparência / Alpha</a></li>
+            <li><a href="#vertex">Vertex Shader</a></li>
         </ol>
     </div>
     <div class="comp-jogos-content">
@@ -135,6 +137,60 @@
     <p>Crie um novo material com esse shader e altere o alpha da Base Color</p>
     <img src="../assets/shader-dither.png" width="75%" alt="Dithering">
     <img src="../assets/shader-dither-resultado.png" width="75%" alt="Dithering Result">
+</div>
+<!-- 
+<div class="comp-jogos-content">
+    <div class="comp-jogos-content-header"id="depth-buffer">Depth Buffer</div>
+    <p>O Depth Buffer (ou Z-buffer) é uma técnica usada em gráficos 3D para gerenciar a profundidade dos objetos em uma cena. Ele armazena informações sobre a distância de cada pixel em relação à câmera, permitindo que o sistema de renderização determine quais objetos estão na frente ou atrás de outros.</p>
+    <p>Existe uma parte mais técnica que dá para se aprofundar, mas não cabe no escopo deste material</p>
+    <p>Para entender um pouco melhor como funciona, vamos duplicar o shader mais simples, o de cor, em que criamos uma variável do tipo Color e levamos para o Fragment (Base Color).</p>
+    <p>A parte importante vem agora: no Graph Settings, conseguimos alterar o Depth Write e o Depth Test</p>
+    <p>O Depth Write determina se o shader escreve ou não no Depth Buffer. </p>
+    <ul>
+        <li>ForceEnabled: O shader sempre escreve no Depth Buffer. - bom para alguns efeitos específicos</li>
+        <li>ForceDisabled: O shader não escreve no Depth Buffer. - bom para objetos translúcidos e outros efeitos</li>
+        <li>Auto: Unity escreve no Depth Buffer para materiais opacos, mas não para materiais transparentes.</li>
+    </ul>
+    <p>Vamos manter como Auto</p>
+    <p>O Depth Test determina como o shader interage com o Depth Buffer existente. Existem várias opções, mas as mais comuns são:</p>
+    <ul>
+        <li>LEqual (padrão): Less or equal - escreve o pixel se a profundidade for mais próxima ou igual ao valor na textura de profundidade</li>
+        <li>Less: O pixel é desenhado se estiver mais próximo da câmera do que o pixel existente no Depth Buffer.</li>
+        <li>Greater: O pixel é desenhado se estiver mais distante da câmera do que o pixel existente no Depth Buffer.</li>
+        <li>Equal: O pixel é desenhado se estiver na mesma distância da câmera que o pixel existente no Depth Buffer.</li>
+        <li>Always: O pixel é sempre desenhado, ignorando o Depth Buffer. Isso pode ser útil para efeitos especiais, mas pode causar problemas de sobreposição.</li>
+    </ul>
+    <p>Fora isso, é interessante deixar a opção "Allow Material Override" marcado, para que você possa editar essas opções para cada material criado a partir deste shader.</p>
+    <div class="importante">Atenção! Dependendo da versão da Unity e URP que estamos usando, pode ser necessário ativar a Depth Texture nas configurações. Um lugar comum para encontrar essas configurações é em Assets > PC_RPAsset > Depth Texture (marcar)</div>
+    <p>Vamos para o shader?</p>
+    <p>Este shader vai servir para criar a silhueta de um objeto 3D quando estiver por trás de um outro objeto, parede, etc.</p>
+    <p>Ao criar o shader e dar um nome, abra e mude o Graph Settings > Surface Type para Transparent</p>
+    <p>Crie duas novas propriedade do tipo Color, chamadas "Foreground Color" e "Background Color". Dê cores diferentes para cada uma.</p>
+    <p>Crie um novo node: Scene Depth - responsável por percorrer a textura de profundidade (Depth Texture), nele, escolha a opção "Linear01". As outras opções têm outras aplicações.</p>
+    <p>Crie um novo node: Lerp - faz a interpolação linear entre A e B de acordo com T (T indo de 0 a 1).</p>
+    -->
+</div>
+<div class="comp-jogos-content">
+    <div class="comp-jogos-content-header" id="vertex"> Vertex Shader</div>
+    <p>A parte Vertex do nosso Master Node é responsável por cuidar da posição, normal e tangente dos vértices do modelo 3D.</p>
+    <p>Vamos criar um shader que "ondula" a superfície de um objeto 3D, como se fosse água.</p>
+    <p>Crie um Unlit Shader Graph novo - dê um nome.</p>
+    <p>No Blackboard, crie duas propriedades: Wave Speed e Wave Strength -- ambas float</p>
+    <p>Crie um node "Position", com Space "World". Esse node te retorna a posição de um vértice da malha.</p>
+    <p>Crie também o node "Time", multiplicando "Time" por "Wave Speed"</p>
+    <p>Como só queremos mexer no X e Z do objeto, vamos precisar usar o node "Split" para dividir a saída de "Position"</p>
+    <p>Em seguida, adicionamos (com o node Add) esses dois valores e adicionamos com a saída da multiplicação anterior.</p>
+    <p>Então, usamos o node Sine para transformar o resultado numa senoide</p>
+    <p>Multiplicamos o resultado do senoide pela propriedade Wave Strength...</p>
+    <p>E finalmente, criamos um Vector3 (node) substituindo seu Y pelo resultado da multiplicação</p>
+    <p>Agora é só somar esse resultado com a saída de um node Position no Space Object</p>
+    <p>E pronto! Só ligar ao Vertex - Position</p>
+    <div class="aviso">Esse não foi tão simples assim, né?</div>
+    <p>Agora é só criar um material novo e colocar num objeto. Sugestão: faça isso num Plane.</p>
+    <p>Segue a colinha: ;)</p>
+    <img src="../assets/vertex-shader.png" width="75%" alt="Shader Vertex Wave">
+    <img src="../assets/vertex-shader-resultado.png" width="75%" alt="Shader Vertex Wave Result">
+
 
 </div>
 
