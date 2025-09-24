@@ -190,17 +190,96 @@
     <p>Segue a colinha: ;)</p>
     <img src="../assets/vertex-shader.png" width="75%" alt="Shader Vertex Wave">
     <img src="../assets/vertex-shader-resultado.png" width="75%" alt="Shader Vertex Wave Result">
-
-
 </div>
 
+<div class="comp-jogos-content">
+    <div class="comp-jogos-content-header" id="post-processing"> Pós-processamento</div>
+    <p>O pós-processamento é uma etapa crucial na criação de gráficos visuais impressionantes em jogos e aplicações 3D. Ele envolve a aplicação de efeitos visuais adicionais após a renderização inicial da cena, aprimorando a qualidade visual e a atmosfera do ambiente.</p>
+    <p>Na Unity, o pós-processamento é frequentemente gerenciado através do componente "Volume", que vem junto com o URP. Esse componente oferece uma variedade de efeitos que podem ser facilmente aplicados e ajustados para alcançar o visual desejado.</p>
+    <p>Alguns dos efeitos de pós-processamento mais comuns incluem:</p>
+    <ul>
+        <li><b>Bloom:</b> Cria um efeito de brilho ao redor de áreas brilhantes da cena, simulando a dispersão da luz.</li>
+        <li><b>Depth of Field:</b> Simula o foco da câmera, desfocando objetos que estão fora do plano focal, criando um efeito de profundidade.</li>
+        <li><b>Color Grading:</b> Permite ajustar as cores da cena para criar diferentes atmosferas e estilos visuais.</li>
+        <li><b>Motion Blur:</b> Adiciona um efeito de desfoque em objetos em movimento, aumentando a sensação de velocidade.</li>
+        <li><b>Vignette:</b> Escurece as bordas da tela, focando a atenção do jogador no centro da imagem.</li>
+    </ul>
+    <p>Para configurar o pós-processamento na Unity, siga estes passos básicos:</p>
+    <ol>
+        <li>Instale e configure o URP (já deve estar pronto)</li>
+        <li>Adicione um objeto com o componente Volume à sua cena.</li>
+        <li>Crie um perfil de pós-processamento e adicione efeitos</li>
+        <li>Ajuste os parâmetros de cada efeito para alcançar o visual desejado.</li>
+        <li>Na câmera do jogo, marque a opção "Post Process"</li>
+        <li>Pode ser necessário ir nas configurações do Renderer (por padrão o nome é PC_Renderer ou Mobile_Renderer) e marcar a opção de Post Processing</li>
+    </ol>
+    <p>O pós-processamento pode transformar significativamente a aparência de uma cena, tornando-a mais realista, estilizada ou atmosférica, dependendo dos efeitos escolhidos e de como são aplicados.</p>
+    <div class="importante">Lembre-se de que o uso excessivo de efeitos de pós-processamento pode impactar o desempenho do jogo, especialmente em dispositivos com hardware limitado. É importante equilibrar a qualidade visual com a performance para garantir uma experiência de jogo suave.</div>   
+</div>
+<div class="comp-jogos-content">
+    <div class="comp-jogos-content-header" id="scripting">Alterando parâmetros de materiais e pós-processamento com scripts</div>
+    <p>É possível alterar parâmetros de materiais e efeitos de pós-processamento através de scripts em C#. Isso permite criar efeitos dinâmicos e interativos em resposta a eventos do jogo ou ações do jogador.</p>
+    <p>Para alterar parâmetros de materiais, você pode acessar o componente Renderer do objeto e modificar as propriedades do material. Por exemplo:</p>
+<pre class="prettyprint">
+                <code>
+using UnityEngine;  
+public class ChangeMaterialColor : MonoBehaviour  
+{  
+    public Color newColor;  
+    private Renderer objRenderer;  
 
+    void Start()  
+    {  
+        objRenderer = GetComponent<Renderer>();  
+        objRenderer.material.color = newColor;  
+    }  
+}
+</pre></code>
+<p>Também é possível alterar parâmetros de shaders criados por você</p>
+<pre class="prettyprint">
+                <code>
+using UnityEngine;
+public class ChangeFresnelPower : MonoBehaviour
+{
+    public float fresnelPower = 1.5f; // Novo valor para a propriedade do shader
+    private Renderer objRenderer;
+    void Start()
+    {
+        objRenderer = GetComponent<Renderer>();
+        objRenderer.material.SetFloat("_FresnelPower", fresnelPower); // "_FresnelPower" seria o nome da propriedade no shader
+    }
+}
+</pre></code>
+    <div class="aviso">Atenção! O nome da propriedade do shader (no exemplo, "_FresnelPower") deve ser exatamente igual ao que foi definido no campo "Reference" do shader.</div>
+    <img src="../assets/fresnel-power.png" alt="Fresnel Power Reference">
+    <p>Para alterar parâmetros de pós-processamento, você pode acessar o componente PostProcessVolume e modificar os efeitos diretamente. Por exemplo, para alterar a intensidade do Bloom:</p>
+    <pre class="prettyprint">
+                <code>
+using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
-    
-    
-    
-    
-    
+public class ChangeBloomIntensity : MonoBehaviour
+{   
+    public Volume postProcessVolume; // Coloque o Volume de pós-processamento no Inspector
+    private Bloom bloom;
+
+    void Start()
+    {
+        if (postProcessVolume.profile.TryGet<Bloom>(out bloom))
+        {
+            bloom.intensity.value = 5f; // Define a nova intensidade do Bloom
+        }
+    }
+}
+
+</code></pre>
+<div class="importante">Muita atenção! A forma que esses parâmetros são alterados pode ser diferente dependendo da versão da Unity ou do URP / Shader Graph / Post Processing.</div>
 </div>
 </div>
 </div>
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+</body>
+</html>
