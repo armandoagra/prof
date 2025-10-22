@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../styles/style.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Gidole&display=swap" rel="stylesheet">
+    <title>Unity: Scripting</title>
+</head>
+<body>
+    <header class="header"> 
+        <nav>
+        <ul class="menu">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="/">Recursos (Jogos)</a></li>
+            <li><a href="/">Contato</a></li>
+        </ul>
+    </nav>
+    </header>
+    <div class="comp-jogos-header">Unity: Scripting</div>
+    <div class="summary">
+        <br><br>
+        <div class="comp-jogos-content-header">Sumário</div>
+        <ol>
+            <li><a href="#scripting-intro">Introdução ao Scripting</a></li>
+        </ol>
+    </div>
+    <div class="comp-jogos-content">
+        <div class="comp-jogos-content-header" id="shader-graph-intro">Scripting: introdução</div>
+        <p>Scripts são arquivos contendo código de programação que vão servir para adicionar ou alterar o comportamento de GameObjects na cena.</p>
+        <p>Em Unity, os scripts são escritos em C#. Eles permitem que você defina como os objetos do jogo interagem entre si, respondem a eventos e se comportam durante o jogo.</p>
+        <div class="comp-jogos-content-header">Criando um script</div>
+        <p>Para criar um script em Unity, siga os passos abaixo:</p>
+        <ol>
+            <li>No painel Project, clique com o botão direito na pasta onde deseja criar o script.</li>
+            <li>Selecione Create &gt; C# Script.</li>
+            <li>Digite um nome para o script e pressione Enter.</li>
+        </ol>
+        <p>Após criar o script, você pode abri-lo em um editor de código, como o Visual Studio, para começar a escrever seu código.</p>
+        <div class="comp-jogos-content-header">Estrutura básica de um script</div>
+        <p>Um script em C# para Unity geralmente tem a seguinte estrutura básica:</p>
+        <pre class="prettyprint">
+using UnityEngine; // Isso é um "namespace" que permite usar as funcionalidades do Unity
+public class NomeDoScript : MonoBehaviour
+{
+    // Método chamado quando o script é iniciado
+    void Start()
+    {
+        // Código de inicialização
+    }
+    // Método chamado a cada frame
+    void Update()
+    {
+        // Código de atualização
+    }
+}
+</pre>
+        <p>Os métodos Start() e Update() são dois dos métodos mais comuns usados em scripts Unity. Start() é chamado uma vez quando o script é iniciado, enquanto Update() é chamado a cada frame do jogo.</p>
+        <div class="comp-jogos-content-header">Anexando scripts a GameObjects</div>
+        <p>Para que um script tenha efeito no jogo, ele precisa ser anexado a um GameObject na cena. Para fazer isso, basta arrastar o script do painel Project para o GameObject desejado no painel Hierarchy ou Scene.</p>
+        <p>Fora isso, para que o código de um script seja executado, é necessário que ele seja "chamado":</p>
+        <ol>
+            <li>Através de eventos do Unity, como Start() e Update().</li>
+            <li>Através de chamadas diretas de outros scripts.</li>
+            <li>Através de colisão</li>
+            <li>Através de input</li>
+        </ol>
+        <div class="comp-jogos-content-header">Exemplo de script</div>
+        <p><strong>Mover um objeto para frente</strong></p>
+        <pre class="prettyprint">using UnityEngine;
+public class MoveForward : MonoBehaviour
+{
+    public float speed = 5f; // Velocidade de movimento
+    void Update()
+    {
+        transform.position += Vector3.forward * speed * Time.deltaTime;
+    }
+}
+</pre>
+<p>Com esse script, conseguimos um comportamento novo: um objeto que sempre anda para frente na mesma velocidade.</p>
+<p>A partir de agora, já conseguimos criar novos objetos que usam o mesmo script mas andam em velocidades diferentes!</p>
+<p>Vamos destrinchar esse código?</p>
+<p>Na linha 1, importamos o namespace UnityEngine, que contém todas as classes e funções necessárias para trabalhar com Unity.</p>
+<p>Na linha 3, definimos uma nova classe chamada MoveForward que herda de MonoBehaviour. Isso é necessário para que o script possa ser anexado a um GameObject.</p>
+<p>Na linha 5, declaramos uma variável pública chamada speed, que define a velocidade de movimento do objeto.</p>
+<p>Na linha 7, definimos o método Update(), que é chamado a cada frame do jogo.</p>
+<p>Na linha 9, alteramos o valor de "position" dentro de "transform" para alterar a posição do personagem. A função Vector3.forward representa a direção para frente no espaço 3D, e multiplicamos isso pela velocidade e pelo tempo delta para garantir um movimento suave.</p>
+<hr>
+<p>Agora que já vimos como é um script simples, vamos reforçar alguns conhecimentos de programação.</p>
+<div class="comp-jogos-content-header">Conceitos básicos de programação</div>
+<p>Antes de avançarmos para scripts mais complexos, é importante entender alguns conceitos básicos de programação:</p>
+<div class="comp-jogos-content-subheader">Variáveis</div>
+<p>Variáveis são usadas para armazenar dados. Em C#, você deve declarar o tipo da variável ao criá-la. Exemplos de tipos comuns incluem int (números inteiros), float (números decimais), string (texto) e bool (verdadeiro/falso).</p>
+<pre class="prettyprint">int score = 0; // Variável inteira
+float speed = 5.5f; // Variável decimal
+string playerName = "Jogador1"; // Variável de texto
+bool isGameOver = false; // Variável booleana
+Vector3 direction; // Variável de vetor 3D
+</pre>
+<div class="aviso">Repare no nome das variáveis: elas seguem o padrão "camelCase", onde a primeira palavra começa com uma letra minúscula e as próximas começam com letra maiúscula. Repare também que todas as variáveis têm nomes claros, que representam alguma coisa. Nada de chamar a variável de "a", "b", "coisa", etc.</div>
+<div class="comp-jogos-content-subheader">Funções / métodos</div>
+<p>Funções (ou métodos) são blocos de código que realizam uma tarefa específica. Elas podem receber parâmetros e retornar valores.</p>
+<pre class="prettyprint">void AddScore(){
+    score++; // Incrementa a pontuação em 1    
+}
+
+void AddScore(int points){
+    score += points; // Incrementa a pontuação em "points"
+}
+</pre>
+    </div>
+    </div
+
+
+
+
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+</body>
+</html>
